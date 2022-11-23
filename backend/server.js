@@ -10,7 +10,7 @@ const app = express();
 
 // middleware's
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // routes middleware
