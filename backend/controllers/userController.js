@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/userModel');
+const bcrypt = require('bcryptjs');
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -29,11 +30,15 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists, please login.')
   }
 
+  // hash password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
   // create new user
   const user = await User.create({
     name,
     email,
-    password
+    password: hashedPassword
   })
 
   if (user) {
