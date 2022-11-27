@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// routes middleware
+// routes middleware's
 app.use('/api/users', userRoute);
 
 // routes
