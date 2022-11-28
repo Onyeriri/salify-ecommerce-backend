@@ -123,4 +123,9 @@ const logout = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { registerUser, loginUser, logout };
+// get user data functionality
+const getUser = asyncHandler(async (req, res) => {
+  res.status(200).send("get user data");
+});
+
+module.exports = { registerUser, loginUser, logout, getUser };
