@@ -39,10 +39,7 @@ const userSchema = mongoose.Schema(
       default: "bio",
     },
   },
-  { timestamps: true },
-  {
-    createdAt: -1,
-  }
+  { timestamps: true }
 );
 
 // Encrypt password before saving to DB
