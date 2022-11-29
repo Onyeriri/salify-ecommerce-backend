@@ -13,7 +13,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
   // validation
-  if ((!name, !email, !password)) {
+  if (!name || !email || !password) {
     res.status(400);
 
     throw new Error("Please fill all the required fields");
@@ -48,7 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
   res.cookie("token", token, {
     path: "/",
     httpOnly: true,
-    expires: new Date(Date.now() + 1000 * 86400),
+    expires: new Date(Date.now() + 1000 * 86400), // 1 day
     sameSite: "none",
     secure: true,
   });
@@ -80,6 +80,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("Please add a valid email and password.");
   }
 
+  // check if user exists
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -89,6 +90,17 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // user exists, check password matches
   const passwordIsCorrect = await bcrypt.compare(password, user.password);
+
+  const token = generateToken(user._id);
+
+  // send HTTP-Only cookie
+  res.cookie("token", token, {
+    path: "/",
+    httpOnly: true,
+    expires: new Date(Date.now() + 1000 * 86400), // 1 day
+    sameSite: "none",
+    secure: true,
+  });
 
   // since user exits get the information
   if (user && passwordIsCorrect) {
@@ -125,7 +137,7 @@ const logout = asyncHandler(async (req, res) => {
 
 // get user data functionality
 const getUser = asyncHandler(async (req, res) => {
-  const user = User.findById(req.user._id);
+  const user = await User.findById(req.user._id);
 
   if (user) {
     const { _id, name, email, photo, phone, bio } = user;
@@ -146,7 +158,20 @@ const getUser = asyncHandler(async (req, res) => {
 
 // get user logged in status
 const loginStatus = asyncHandler(async (req, res) => {
-  res.status(200).send("User is logged in...");
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.json(false);
+  }
+
+  // verify token
+  const verified = jwt.verify(token, process.env.JWT_SECRET);
+
+  if (verified) {
+    return res.json(true);
+  }
+
+  return res.json(false);
 });
 
 module.exports = { registerUser, loginUser, logout, getUser, loginStatus };
