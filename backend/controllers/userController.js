@@ -174,4 +174,16 @@ const loginStatus = asyncHandler(async (req, res) => {
   return res.json(false);
 });
 
-module.exports = { registerUser, loginUser, logout, getUser, loginStatus };
+// update user
+const updateUser = asyncHandler(async (req, res) => {
+  res.status(200).send("Update user route");
+});
+
+module.exports = {
+  registerUser,
+  loginUser,
+  logout,
+  getUser,
+  loginStatus,
+  updateUser,
+};
