@@ -203,6 +203,10 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+const changePassword = asyncHandler(async (req, res) => {
+  res.status(200).send("Change password...");
+});
+
 module.exports = {
   registerUser,
   loginUser,
@@ -210,4 +214,5 @@ module.exports = {
   getUser,
   loginStatus,
   updateUser,
+  changePassword,
 };
