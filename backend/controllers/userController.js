@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const Token = require("../models/tokenModel");
 const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
 
 // generate token
 const generateToken = (id) => {
@@ -247,6 +248,11 @@ const forgotPassword = asyncHandler(async (req, res) => {
     throw new Error("User does not exist");
   }
 
+  // delete token if it exists in DB
+  let token = await Token.findOne({ userId: user._id });
+  if (token) {
+    await token.deleteOne();
+  }
   // create reset token
   let resetToken = crypto.randomBytes(32).toString("hex") + user._id;
 
@@ -279,7 +285,20 @@ const forgotPassword = asyncHandler(async (req, res) => {
     <p>Salify Team </p>
   `;
 
-  res.send(hashedToken);
+  const subject = "Password Reset Request";
+  const send_to = user.email;
+  const sent_from = process.env.EMAIL_USER;
+
+  try {
+    await sendEmail(subject, message, send_to, sent_from);
+    res.status(200).json({
+      success: true,
+      message: "Reset Email Sent",
+    });
+  } catch (error) {
+    res.status(500);
+    throw new Error("Email not sent, please try again.");
+  }
 });
 
 module.exports = {
