@@ -256,8 +256,30 @@ const forgotPassword = asyncHandler(async (req, res) => {
     .update(resetToken)
     .digest("hex");
 
+  // save password to DB
+  await new Token({
+    userId: user._id,
+    token: hashedToken,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 30 * (60 * 1000), // thirty minutes
+  }).save();
+
+  // construct reset url
+  const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+
+  // construct frontend message
+  const message = `
+    <h2> Hello ${user.name} </h2>
+    <p> Please use the url below to reset your password </p>
+    <p> This reset link is valid for only 30 minutes. </p>
+
+    <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+
+    <p>Regards...</p>
+    <p>Salify Team </p>
+  `;
+
   res.send(hashedToken);
-  console.log(hashedToken);
 });
 
 module.exports = {
