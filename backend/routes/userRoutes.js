@@ -8,6 +8,7 @@ const {
   updateUser,
   changePassword,
   forgotPassword,
+  resetPassword,
 } = require("../controllers/userController");
 const protect = require("../middleware/authMiddleware");
 
@@ -21,5 +22,6 @@ router.get("/logged-in", loginStatus);
 router.patch("/update-user", protect, updateUser);
 router.patch("/change-password", protect, changePassword);
 router.post("/forgot-password", forgotPassword);
+router.put("/reset-password/:restToken", resetPassword);
 
 module.exports = router;
