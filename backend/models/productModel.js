@@ -33,7 +33,7 @@ const productionSchema = mongoose.Schema(
       required: [true, "Please add a description"],
       trim: true,
     },
-    description: {
+    image: {
       type: Object,
       default: {},
     },
