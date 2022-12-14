@@ -62,9 +62,27 @@ const getProducts = asyncHandler(async (req, res) => {
 const getProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
+  // if product does not exit
   if (!product) {
     res.status(404);
     throw new Error("Product not found!!!");
+  }
+
+  if (product.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+
+  res.status(200).json(product);
+});
+
+// delete product
+const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findByIdAndDelete(req.params.id);
+
+  if (!product) {
+    res.status(404);
+    throw new Error("User not found!!!");
   }
 
   if (product.user.toString() !== req.user.id) {
@@ -79,4 +97,5 @@ module.exports = {
   createProduct,
   getProducts,
   getProduct,
+  deleteProduct,
 };
