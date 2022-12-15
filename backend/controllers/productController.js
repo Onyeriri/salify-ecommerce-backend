@@ -68,6 +68,7 @@ const getProduct = asyncHandler(async (req, res) => {
     throw new Error("Product not found!!!");
   }
 
+  // match product product with user
   if (product.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error("User not authorized");
@@ -80,11 +81,13 @@ const getProduct = asyncHandler(async (req, res) => {
 const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findByIdAndDelete(req.params.id);
 
+  // if product does not exit
   if (!product) {
     res.status(404);
     throw new Error("User not found!!!");
   }
 
+  // match product product with user
   if (product.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error("User not authorized");
@@ -93,9 +96,14 @@ const deleteProduct = asyncHandler(async (req, res) => {
   res.status(200).json(product);
 });
 
+// update product
+const updateProduct = asyncHandler(async (req, res) => {
+  res.send("update route");
+});
 module.exports = {
   createProduct,
   getProducts,
   getProduct,
   deleteProduct,
+  updateProduct,
 };
