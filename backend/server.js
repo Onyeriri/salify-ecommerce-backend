@@ -8,6 +8,7 @@ const productRoute = require("./routes/productRoute");
 const errorHandler = require("./middleware/errorMiddleware");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const contactRoute = require("./routes/contactRoute");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // routes middleware's
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
+app.use("/api/contact", contactRoute);
 
 // routes
 app.get("/", (req, res) => {
