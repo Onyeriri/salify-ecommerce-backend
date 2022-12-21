@@ -50,7 +50,7 @@ const Home = () => {
         </div>
 
         <div className="hero-image">
-          <img src={heroImage} alt="hero image" />
+          <img src={heroImage} alt="hero poster" />
         </div>
       </section>
     </div>
